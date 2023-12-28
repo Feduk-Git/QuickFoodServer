@@ -1,0 +1,62 @@
+﻿<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var table = document.querySelector('table');
+        table.addEventListener('click', function (event) {
+            var target = event.target;
+            if (target.classList.contains('edit-btn')) {
+                var row = target.closest('tr');
+                var headers
+                var fields = row.querySelectorAll('.field');
+                var inputs = row.querySelectorAll('.input-field');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].style.display = '';
+                }
+
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.display = 'none';
+                }
+                target.style.display = 'none';
+                row.querySelector('.cancel-btn').style.display = '';
+                row.querySelector('.save-btn').style.display = '';
+            }
+            else if (target.classList.contains('save-btn')) {
+                var row = target.closest('tr');
+                var inputs = row.querySelectorAll('.input-field');
+                var validation = false;
+
+                for (var i = 0; i < inputs.length && validation; i++) {
+                    validation = inputs[i].validity.valid;
+                }
+
+                if (validation) {
+                    var fields = row.querySelectorAll('.field');
+                    for (var i = 0; i < inputs.length; i++) {
+                        inputs[i].style.display = 'none';
+                    }
+
+                    for (var i = 0; i < fields.length; i++) {
+                        fields[i].style.display = '';
+                    }
+                    row.querySelector('.save-btn').style.display = 'none';
+                    row.querySelector('.cancel-btn').style.display = 'none';
+                    row.querySelector('.edit-btn').style.display = '';
+                }
+            }
+            else if (target.classList.contains('cancel-btn')) {
+                var row = target.closest('tr');
+                var inputs = row.querySelectorAll('.input-field');
+                var fields = row.querySelectorAll('.field');
+                for (var i = 0; i < inputs.length; i++) {
+                    inputs[i].style.display = 'none';
+                }
+
+                for (var i = 0; i < fields.length; i++) {
+                    fields[i].style.display = '';
+                }
+                row.querySelector('.save-btn').style.display = 'none';
+                row.querySelector('.cancel-btn').style.display = 'none';
+                row.querySelector('.edit-btn').style.display = '';
+            }
+        });
+    });
+</script>

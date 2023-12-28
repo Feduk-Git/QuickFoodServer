@@ -1,0 +1,102 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <form method="post" asp-action="Update" enctype="multipart/form-data">
+                        <tr>
+                            <th class="align-middle" scope="row">@item.Id</th>
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Name</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       value="@item.Name"
+                                       style="display:none"
+                                       name="Name"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group text-center">
+                                <img class="img-fluid field" src="@item.ImagePathRelative" style="width: 120px; height: 120px; object-fit: cover;">
+                                <input class="form-control input-field" type="file" name="image" style="display:none" accept="image/*">
+                            </td>
+                            <td class="align-middle form-group">
+                                <button type="button"
+                                        class="btn btn-primary edit-btn"
+                                        data-toggle="tooltip"
+                                        title="Редагувати запис">
+                                    Edit
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-success save-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Зберегти зміни">
+                                    <i class="bi bi-check-lg"></i>
+                                </button>
+                                <button type="button"
+                                        class="btn btn-warning cancel-btn"
+                                        style="display: none;"
+                                        data-toggle="tooltip"
+                                        title="Відмінити">
+                                    <i class="bi bi-x-lg"></i>
+                                </button>
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        asp-action="Delete"
+                                        data-toggle="tooltip"
+                                        title="Delete record">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            @{
+                await Html.RenderPartialAsync("_Pager", pager);
+            }
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">Add new category</div>
+                <div class="card-body">
+                    <form method="post" asp-action="Create" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Image</label>
+                            <input class="form-control" type="file" name="image" accept="image/*" required>
+                        </div>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="_TableScript" />

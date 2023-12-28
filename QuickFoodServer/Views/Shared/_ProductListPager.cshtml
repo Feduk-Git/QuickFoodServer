@@ -1,0 +1,68 @@
+﻿@model QuickFoodServer.Utils.Pager
+@using System.Diagnostics
+
+@{
+    string currentController = ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="container-fluid">
+    @if (Model.TotalPages > 1)
+    {
+        <ul class="pagination justify-content-end">
+
+            @if (Model.CurrentPage > 1)
+            {
+                @if (Model.TotalPages > 2)
+                {
+                    <li class="page-item">
+                        <a class="page-link" 
+                            asp-controller="@currentController" 
+                            asp-action="ProductList" 
+                            asp-route-id="@ViewBag.OrderId" 
+                            asp-route-page="1">First</a>
+                    </li>
+                }
+                <li>
+                    <a class="page-link" 
+                        asp-controller="@currentController" 
+                        asp-action="ProductList" 
+                        asp-route-id="@ViewBag.OrderId" 
+                        asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+                </li>
+            }
+
+            @for (var pg = Model.StartPage; pg <= Model.EndPage; pg++)
+            {
+                <li class="page-item @(pg == Model.CurrentPage ? "active": "")">
+                    <a class="page-link" 
+                        asp-controller="@currentController" 
+                        asp-action="ProductList" 
+                        asp-route-id="@ViewBag.OrderId" 
+                        asp-route-page="@pg">@pg</a>
+                </li>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <li class="page-item">
+                    <a class="page-link" 
+                        asp-controller="@currentController" 
+                        asp-action="ProductList" 
+                        asp-route-id="@ViewBag.OrderId" 
+                        asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+                </li>
+
+                @if (Model.TotalPages > 2)
+                {
+                    <li>
+                        <a class="page-link" 
+                            asp-controller="@currentController" 
+                            asp-action="ProductList" 
+                            asp-route-id="@ViewBag.OrderId" 
+                            asp-route-page="@(Model.TotalPages)">Last</a>
+                    </li>
+                }
+            }
+        </ul>
+    }
+</div>

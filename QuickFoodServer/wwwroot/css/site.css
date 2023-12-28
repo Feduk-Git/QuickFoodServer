@@ -1,0 +1,7 @@
+.btn-block {
+    display: block;
+    width: 100%;
+}
+i {
+    pointer-events: none;
+}

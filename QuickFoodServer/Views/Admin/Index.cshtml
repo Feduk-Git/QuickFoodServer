@@ -1,0 +1,189 @@
+﻿@{
+    Pager pager = new Pager();
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+    }
+}
+<div class="container-fluid">
+    <div class="row">
+        @if (TempData.ContainsKey("ErrorMessage"))
+        {
+            <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        }
+        <div class="col-12">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Surname</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">City</th>
+                        @if (User.IsInRole("Main administrator"))
+                        {
+                            <th scope="col">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Admin item in Model)
+                    {
+                        <form method="post" asp-action="Update">
+                        <tr>
+                            <th class="align-middle" scope="row">@item.Id</th>
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Email</span>
+                                <input class="input-field text-input form-control"
+                                       type="email"
+                                       value="@item.Email"
+                                       style="display:none"
+                                       name="Email"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Name</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       value="@item.Name"
+                                       style="display:none"
+                                       name="Name"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Surname</span>
+                                <input class="input-field text-input form-control"
+                                       type="text"
+                                       value="@item.Surname"
+                                       style="display:none"
+                                       name="Surname"
+                                       required />
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.Role.Name</span>
+                                <select class="form-control input-field"
+                                        name="RoleId"
+                                        style="display:none"
+                                        required>
+                                        @foreach (Role role in ViewBag.Roles)
+                                        {
+                                            <option value="@role.Id">@role.Name</option>
+                                        }
+                                </select>
+                            </td>
+                            <td class="align-middle form-group">
+                                <span class="field">@item.City.Name</span>
+                                <select class="form-control input-field"
+                                        name="CityId"
+                                        style="display:none"
+                                        required>
+                                        @foreach (City city in ViewBag.Cities)
+                                        {
+                                            <option value="@city.Id">@city.Name</option>
+                                        }
+                                </select>
+                            </td>
+                            @if (User.IsInRole("Main administrator"))
+                            {
+                                <td class="align-middle form-group">
+                                    @if (item.Email != User.Identity.Name)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-primary edit-btn"
+                                                data-toggle="tooltip"
+                                                title="Редагувати запис">
+                                            Edit
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-success save-btn"
+                                                style="display: none;"
+                                                data-toggle="tooltip"
+                                                title="Зберегти зміни">
+                                            <i class="bi bi-check-lg"></i>
+                                        </button>
+                                        <button type="button"
+                                                class="btn btn-warning cancel-btn"
+                                                style="display: none;"
+                                                data-toggle="tooltip"
+                                                title="Відмінити">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                asp-action="Delete"
+                                                data-toggle="tooltip"
+                                                title="Delete record">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                        </form>
+                    }
+                </tbody>
+            </table>
+            @{
+                await Html.RenderPartialAsync("_Pager", pager);
+            }
+        </div>
+
+        @if (User.IsInRole("Main administrator"))
+        {
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header">Add new administrator</div>
+                    <div class="card-body">
+                        <form method="post" asp-action="Create">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" name="Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Surname</label>
+                                <input type="text" class="form-control" name="Surname" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" name="Password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <select class="form-control"
+                                        name="RoleId"
+                                        required>
+                                    @foreach (Role role in ViewBag.Roles)
+                                    {
+                                        <option value="@role.Id">@role.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <select class="form-control"
+                                        name="CityId"
+                                        required>
+                                    @foreach (City city in ViewBag.Cities)
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-block">Додати</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<partial name="_TableScript" />
